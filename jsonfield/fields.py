@@ -51,7 +51,9 @@ class JSONField(models.TextField):
 
     def value_to_string(self, obj):
         value = self._get_val_from_obj(obj)
-        return self.get_prep_value(value)
+        if isinstance(value, basestring):
+            return value
+        return json.dumps(value, **self.dump_kwargs)
 
     def value_from_object(self, obj):
         return json.dumps(super(JSONField, self).value_from_object(obj))
